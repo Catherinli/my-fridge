@@ -1,11 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import MyFridgeSection from "./screens/MyFridgeScreen";
+import Todo from "./components/Todo";
 
 export default function App() {
+  const [activeTab, setActiveTab] = useState<"fridge" | "todo">("fridge");
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      {/* 主体内容：使用 View 作为容器，内部的 FlatList 将负责滚动，避免嵌套 ScrollView 问题 */}
+      <View style={styles.content}>
+        {activeTab === "fridge" ? <MyFridgeSection /> : <Todo />}
+      </View>
+      {/* 顶部Segment切换栏 */}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[styles.tabButton, activeTab === "fridge" && styles.activeTab]}
+          onPress={() => setActiveTab("fridge")}
+        >
+          <Text style={[styles.tabText, activeTab === "fridge" && styles.activeText]}>
+            我的冰箱
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tabButton, activeTab === "todo" && styles.activeTab]}
+          onPress={() => setActiveTab("todo")}
+        >
+          <Text style={[styles.tabText, activeTab === "todo" && styles.activeText]}>
+            待办事项
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -13,8 +39,38 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#F8FBFF",
+    marginTop: 50,
+  },
+  tabContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 10,
+    backgroundColor: "#E6E8ED",
+    borderRadius: 20,
+    marginHorizontal: 60,
+    padding: 4,
+  },
+  tabButton: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 8,
+    borderRadius: 16,
+  },
+  tabText: {
+    color: "#555",
+    fontWeight: "600",
+    fontSize: 14,
+  },
+  activeTab: {
+    backgroundColor: "#FFFFFF",
+  },
+  activeText: {
+    color: "#2A52BE",
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
   },
 });
