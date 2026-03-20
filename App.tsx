@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MyFridgeSection from "./screens/MyFridgeScreen";
 import Todo from "./components/Todo";
+import { initDB } from "./src/database/initDB";
 
 export default function App() {
+  // DB initialization
+  useEffect(() => {
+    initDB();
+  }, []);
+  // Tab state
   const [activeTab, setActiveTab] = useState<"fridge" | "todo">("fridge");
 
   return (
-    <View style={styles.container}>
-      {/* 主体内容：使用 View 作为容器，内部的 FlatList 将负责滚动，避免嵌套 ScrollView 问题 */}
+    <GestureHandlerRootView style={styles.container}>
       <View style={styles.content}>
         {activeTab === "fridge" ? <MyFridgeSection /> : <Todo />}
       </View>
-      {/* 顶部Segment切换栏 */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tabButton, activeTab === "fridge" && styles.activeTab]}
@@ -22,7 +27,6 @@ export default function App() {
             我的冰箱
           </Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={[styles.tabButton, activeTab === "todo" && styles.activeTab]}
           onPress={() => setActiveTab("todo")}
@@ -32,7 +36,7 @@ export default function App() {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 

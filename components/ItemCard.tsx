@@ -61,7 +61,9 @@ export default function ItemCard({ item, onIncrease, onDecrease, onDelete, cardW
   return (
     <View style={[styles.card, { width: cardWidth ?? 140 }]}>
       <View style={styles.row}>
-        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.name} numberOfLines={1}>
+          {item.name}
+        </Text>
         {/* 增加数量的按钮，紧贴卡片右上角，按下时显示虚框；支持按住连续增加 */}
         <Pressable
           onPressIn={() => startContinuous(onIncrease)}
@@ -76,9 +78,8 @@ export default function ItemCard({ item, onIncrease, onDecrease, onDelete, cardW
           <Text style={styles.plusText}>＋</Text>
         </Pressable>
       </View>
-      <Text style={styles.tag}>{item.tag}</Text>
-      <View style={styles.controls}>
-        {/* 数量区域支持按住连续减少，不新增额外按钮 */}
+      {item.tag ? <Text style={styles.tag}>{item.tag}</Text> : null}
+      <View style={styles.bottomRow}>
         <Pressable
           onPressIn={() => startContinuous(onDecrease)}
           onPressOut={stopContinuous}
@@ -88,10 +89,10 @@ export default function ItemCard({ item, onIncrease, onDecrease, onDelete, cardW
         >
           <Text style={styles.qtyText}>数量：{item.qty}</Text>
         </Pressable>
+        {typeof item.daysAgo === "number" ? (
+          <Text style={styles.date}>{item.daysAgo === 0 ? "今天" : `${item.daysAgo}天前`}</Text>
+        ) : null}
       </View>
-      <Text style={styles.date}>
-        {item.daysAgo === 0 ? "今天" : `${item.daysAgo}天前`}
-      </Text>
     </View>
   );
 }
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
     // width is controlled by parent via `cardWidth` to support responsive grids
     backgroundColor: "#fff",
     borderRadius: 12,
-    padding: 12,
+    padding: 10,
     shadowColor: "#000",
     shadowOpacity: 0.07,
     shadowOffset: { width: 0, height: 3 },
@@ -113,23 +114,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 4,
+    marginBottom: 2,
   },
   name: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "600",
+    paddingRight: 18,
   },
   tag: {
-    fontSize: 11,
+    fontSize: 10,
     backgroundColor: "#eef1f6",
     alignSelf: "flex-start",
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 6,
-    marginBottom: 8,
+    marginBottom: 6,
     color: "#333",
   },
-  controls: {
+  bottomRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -146,19 +148,18 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   qtyText: {
-    fontSize: 13,
+    fontSize: 12,
     color: "#333",
   },
   date: {
     textAlign: "right",
     color: "#888",
-    fontSize: 11,
-    marginTop: 6,
+    fontSize: 10,
   },
   plusBtn: {
     position: 'absolute',
-    top: -10,
-    right: -10,
+    top: -8,
+    right: -8,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 6,
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   plusText: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#2A52BE',
     fontWeight: '600',
   },
